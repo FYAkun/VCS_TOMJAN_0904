@@ -1,16 +1,20 @@
 import random
 import hangmanwordbank
-#apsibreziam kintamuosius kurie visose partijose bus
-zaidziam=True
-leidziamos_raides="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-pergales=0.0
-pralaimejimai=0.0
-#apsibreziam standartines funkcijas
+
+# apsibreziam kintamuosius kurie visose partijose bus
+zaidziam = True
+leidziamos_raides = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+pergales = 0.0
+pralaimejimai = 0.0
+
+
+# apsibreziam standartines funkcijas
 def klaidu_pasirinkimas():
     klaidos = int(input("Iveskite kiek kartu leidziama suklysti (3-6): "))
     while klaidos > 6 or klaidos < 3:
         klaidos = int(input("Iveskite kiek kartu leidziama suklysti (3-6): "))
     return klaidos
+
 
 def lygio_pasirinkimas():
     lygis = int(input("Pasirinkite lygi:"))
@@ -18,54 +22,70 @@ def lygio_pasirinkimas():
         lygis = int(input("Pasirinkite lygi:"))
     return lygis
 
-def zodzio_isrinkimas():
-    failo_objektas=open("zodziu_sarasas.txt", "r")
+
+def temos_pasirinkimas():
+    tema = int(input("Pasirinkite tema: \n 1 - Dazniausi anglu kalbos zodziai \n 2 - Masinos dalys \n 3 - Gyvunai"))
+    while tema < 1 or tema > 3:
+        tema = int(input("Pasirinkite tema: \n 1 - Dazniausi anglu kalbos zodziai \n 2 - Masinos dalys \n 3 - Gyvunai"))
+    if tema == 1:
+        sarasas = "zodziu_sarasas.txt"
+        return sarasas
+    elif tema == 2:
+        sarasas = "carparts.txt"
+        return sarasas
+    else:
+        sarasas = "animals.txt"
+        return sarasas
+
+
+
+
+def zodzio_isrinkimas(sarasas):
+    failo_objektas = open(sarasas, "r")
     for zodis in failo_objektas.readlines():
-        zodzio_ilgis = zodis.__len__()-1 # -1, nes \n suprantamas kaip 1 simbolis
-        if lygis >= zodzio_ilgis and zodzio_ilgis >=3:
+        zodzio_ilgis = zodis.__len__() - 1  # -1, nes \n suprantamas kaip 1 simbolis
+        if lygis >= zodzio_ilgis and zodzio_ilgis >= 3:
             zodziu_sarasas.append(zodis.replace("\n", ""))
             zodis_kuri_spet = random.choice(zodziu_sarasas)
     return zodis_kuri_spet
 
-# Kol kas nepavyko iskelti, nes zaidimo_momentas meta NameError
-#def raide_jau_speta():
-#    if spejimai.count(spejimas) == 1:
-#        print("sia raide jau spejote, taciau pirma karta klaida neskaiciuojama")
-#        spejimai.append(spejimas)
-#    else:
-#        print("sia raide spejote jau keleta kartu, tai skaiciuojama kaip klaida")
-#        zaidimo_momentas = zaidimo_momentas + 1
-#        hangmanwordbank.Piesimas(zaidimo_momentas)
-#        print(pasleptas_zodis)
 
-while zaidziam==True:
-    #apsibreziam kintamuosius, kurie kiekvienai partijai bus nauji
+while zaidziam == True:
+    # apsibreziam kintamuosius, kurie kiekvienai partijai bus nauji
+    sarasas = ""
     zodziu_sarasas = []
-    klaidos=klaidu_pasirinkimas()
-    lygis=lygio_pasirinkimas()
-    zodis_kuri_spet=zodzio_isrinkimas()
-    zaidimo_momentas=6-klaidos
-    raidziu_skaicius=zodis_kuri_spet.__len__()
-    pasleptas_zodis=" _"*raidziu_skaicius
-    spejimai=[]
-    atspetos_raides=0
-    pasikartojantis_spejimas=0
+    klaidos = klaidu_pasirinkimas()
+    lygis = lygio_pasirinkimas()
+
+    while sarasas == "":
+        try:
+            sarasas = temos_pasirinkimas()
+        except ValueError:
+            print("Temai pasirinkti galima naudoti tik skaicius.")
+
+    zodis_kuri_spet = zodzio_isrinkimas(sarasas)
+    zaidimo_momentas = 6 - klaidos
+    raidziu_skaicius = zodis_kuri_spet.__len__()
+    pasleptas_zodis = " _" * raidziu_skaicius
+    spejimai = []
+    atspetos_raides = 0
+    pasikartojantis_spejimas = 0
     #   print(zodis_kuri_spet) #sanity check
     print("Zodis sudarytas is ", raidziu_skaicius, " raidziu")
     print(pasleptas_zodis)
     partija = True
     while partija == True:
-        #print(atspetos_raides) #sanity check
+        # print(atspetos_raides) #sanity check
         if atspetos_raides == zodis_kuri_spet.__len__():
             print("Sveikiname, jus laimejote")
-            pergales=pergales+1
+            pergales = pergales + 1
             break
         elif zaidimo_momentas == 6:
             print("Deja, jus pralaimejote, zodis buvo - ", zodis_kuri_spet)
-            pralaimejimai=pralaimejimai+1
+            pralaimejimai = pralaimejimai + 1
             break
         else:
-            spejimas=input("Spekite raide: ")
+            spejimas = input("Spekite raide: ")
             if spejimas.__len__() != 1:
                 print("Ivedete per daug simboliu")
                 continue
@@ -74,11 +94,10 @@ while zaidziam==True:
                 continue
             else:
                 if spejimas in spejimai:
-#                    raide_jau_speta()
-# zaidimo_momentas neaprasytas (nes funkcija anksciau uz kintamojo ivedima)
-                    if spejimai.count(spejimas) == 1 and pasikartojantis_spejimas==0:
+                    # zaidimo_momentas neaprasytas (nes funkcija anksciau uz kintamojo ivedima)
+                    if pasikartojantis_spejimas == 0:
                         print("Sia raide jau spejote, taciau pirma karta klaida neskaiciuojama")
-                        pasikartojantis_spejimas=pasikartojantis_spejimas+1
+                        pasikartojantis_spejimas = pasikartojantis_spejimas + 1
                         spejimai.append(spejimas)
                     else:
                         print("Sia raide jau spejote, tai skaiciuojama kaip klaida")
@@ -91,22 +110,21 @@ while zaidziam==True:
                     pasikartojimas = zodis_kuri_spet.count(spejimas)
                     atspetos_raides = atspetos_raides + pasikartojimas
                     for i, c in enumerate(zodis_kuri_spet):
-                        if spejimas==c:
-                            pasleptas_zodis = pasleptas_zodis[:2*i+1] + spejimas + pasleptas_zodis[2*i+2:]
+                        if spejimas == c:
+                            pasleptas_zodis = pasleptas_zodis[:2 * i + 1] + spejimas + pasleptas_zodis[2 * i + 2:]
                     print(pasleptas_zodis)
                     continue
                 else:
                     print("Tokios raides zodyje nera")
                     spejimai.append(spejimas)
-                    zaidimo_momentas=zaidimo_momentas+1
+                    zaidimo_momentas = zaidimo_momentas + 1
                     hangmanwordbank.Piesimas(zaidimo_momentas)
                     print(pasleptas_zodis)
                     continue
-    try : #sitas for fun itrauktas
-        laimejimu_procentas = (pergales / (pergales + pralaimejimai))*100
-        print("Siuo metu jusu rezultatas: ", pergales, " pergales ", pralaimejimai, " pralaimejimai ", laimejimu_procentas, " % laimejimai")
-    except ZeroDivisionError:
-        pass
+    # sitas for fun itrauktas
+    laimejimu_procentas = (pergales / (pergales + pralaimejimai)) * 100
+    print("Siuo metu jusu rezultatas: ", pergales, " pergales ", pralaimejimai, " pralaimejimai ", laimejimu_procentas,
+          " % laimejimai")
     atsakymas = input("Ar norite zaisti dar karta:(y/n) ?")
     if atsakymas == "y":
         continue
