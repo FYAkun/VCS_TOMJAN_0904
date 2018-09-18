@@ -17,9 +17,9 @@ def klaidu_pasirinkimas():
 
 
 def lygio_pasirinkimas():
-    lygis = int(input("Pasirinkite lygi:"))
+    lygis = int(input("Pasirinkite lygi (3-9):"))
     while lygis <= 3 or lygis >= 9:
-        lygis = int(input("Pasirinkite lygi:"))
+        lygis = int(input("Pasirinkite lygi (3-9):"))
     return lygis
 
 
@@ -50,10 +50,25 @@ def zodzio_isrinkimas(sarasas):
 
 while zaidziam == True:
     # apsibreziam kintamuosius, kurie kiekvienai partijai bus nauji
+    klaidos=0
+    lygis=0
     sarasas = ""
     zodziu_sarasas = []
-    klaidos = klaidu_pasirinkimas()
-    lygis = lygio_pasirinkimas()
+
+
+    while klaidos == 0:
+        try:
+            klaidos = klaidu_pasirinkimas()
+        except ValueError:
+            print("Klaidu skaiciui nusirodyti, naudokite tik skaicius.")
+
+
+    while lygis == 0:
+        try:
+            lygis = lygio_pasirinkimas()
+        except ValueError:
+            print("Sunkumo lygiui nusirodyti, naudokite tik skaicius.")
+
 
     while sarasas == "":
         try:
