@@ -38,8 +38,6 @@ def temos_pasirinkimas():
         return sarasas
 
 
-
-
 def zodzio_isrinkimas(sarasas):
     failo_objektas = open(sarasas, "r")
     for zodis in failo_objektas.readlines():
