@@ -68,6 +68,22 @@ while zaidziam == True:
     spejimai = []
     atspetos_raides = 0
     pasikartojantis_spejimas = 0
+
+
+    def pasikartojantis_testas(spejimas, pasikartojantis_spejimas):
+        pasikartojantis_spejimas = pasikartojantis_spejimas + 1
+        spejimai.append(spejimas)
+        return pasikartojantis_spejimas
+
+
+    def zaidimo_momento_ticker(spejimas, zaidimo_momentas):
+        spejimai.append(spejimas)
+        zaidimo_momentas = zaidimo_momentas + 1
+        hangmanwordbank.Piesimas(zaidimo_momentas)
+        print(pasleptas_zodis)
+        return zaidimo_momentas
+
+
     #   print(zodis_kuri_spet) #sanity check
     print("Zodis sudarytas is ", raidziu_skaicius, " raidziu")
     print(pasleptas_zodis)
@@ -92,16 +108,12 @@ while zaidziam == True:
                 continue
             else:
                 if spejimas in spejimai:
-                    # zaidimo_momentas neaprasytas (nes funkcija anksciau uz kintamojo ivedima)
                     if pasikartojantis_spejimas == 0:
+                        pasikartojantis_spejimas=pasikartojantis_testas(spejimas, pasikartojantis_spejimas)
                         print("Sia raide jau spejote, taciau pirma karta klaida neskaiciuojama")
-                        pasikartojantis_spejimas = pasikartojantis_spejimas + 1
-                        spejimai.append(spejimas)
                     else:
+                        zaidimo_momentas=zaidimo_momento_ticker(spejimas, zaidimo_momentas)
                         print("Sia raide jau spejote, tai skaiciuojama kaip klaida")
-                        zaidimo_momentas = zaidimo_momentas + 1
-                        hangmanwordbank.Piesimas(zaidimo_momentas)
-                        print(pasleptas_zodis)
                 elif spejimas in zodis_kuri_spet:
                     print("Raide zodyje yra")
                     spejimai.append(spejimas)
@@ -114,11 +126,9 @@ while zaidziam == True:
                     continue
                 else:
                     print("Tokios raides zodyje nera")
-                    spejimai.append(spejimas)
-                    zaidimo_momentas = zaidimo_momentas + 1
-                    hangmanwordbank.Piesimas(zaidimo_momentas)
-                    print(pasleptas_zodis)
+                    zaidimo_momentas=zaidimo_momento_ticker(spejimas, zaidimo_momentas)
                     continue
+
     # sitas for fun itrauktas
     laimejimu_procentas = (pergales / (pergales + pralaimejimai)) * 100
     print("Siuo metu jusu rezultatas: ", pergales, " pergales ", pralaimejimai, " pralaimejimai ", laimejimu_procentas,
