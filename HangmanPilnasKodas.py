@@ -18,7 +18,7 @@ def klaidu_pasirinkimas():
 
 def lygio_pasirinkimas():
     lygis = int(input("Pasirinkite lygi (3-9):"))
-    while lygis <= 3 or lygis >= 9:
+    while lygis <= 3 or lygis > 9:
         lygis = int(input("Pasirinkite lygi (3-9):"))
     return lygis
 
